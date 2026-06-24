@@ -2,62 +2,107 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRUD Operations</title>
-    <link   rel="stylesheet" href="style.css">
+    <title>Student CRUD System</title>
+
+    <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <nav class="navbar">
-            <img src="../images/northhub.svg" id="logo"></img>
-            <button class="navbarbuttons" onclick="showSection('create')"> Create </button>
-            <button class="navbarbuttons" > Read </button>
-            <button class="navbarbuttons" > Update </button>
-            <button class="navbarbuttons" > Delete </button>
-    </nav>
-    <section id="home" class="homecontent"> 
-        <h1 class="splash">Welcome to Student Management System</h1>
-        <h2 class="splash">A Project in Integrative Programming Technologies</h2>
-    </section>
-    
-    <section id="create" class="content">
-        <h1 class="contenttitle"> Insert New Student </h1>
 
-    <form action="../includes/insert.php" method="POST">
-        <label for="surname" class="label">Surname</label>
-        <input type="text" name="surname" id="surname" class="field" required><br/>
+<nav class="navbar">
 
-        <label for="name" class="label">Name</label>
-        <input type="text" name="name" id="name" class="field" required><br/>
+    <a href="#" onclick="goHome()">
+        <img src="logo1.jpeg" id="logo" alt="Logo">
+    </a>
 
-        <label for="middlename" class="label">Middle name</label>
-        <input type="text" name="middlename" id="middlename" class="field"><br/>
+    <button class="navbarbuttons" onclick="showSection('home')">Home</button>
+    <button class="navbarbuttons" onclick="showSection('create')">Create</button>
+    <button class="navbarbuttons" onclick="showSection('read')">Read</button>
+    <button class="navbarbuttons" onclick="showSection('update')">Update</button>
+    <button class="navbarbuttons" onclick="showSection('delete')">Delete</button>
 
-        <label for="address" class="label">Address</label>
-        <input type="text" name="address" id="address" class="field"><br/>
-
-        <label for="contact" class="label">Mobile Number</label>
-        <input type="text" name="contact" id="contact" class="field"><br/>
-
-        <div id="btncontainer">
-            <button type="button" id="clrbtn" class="btns">Clear Fields</button><br/>
-            <button type="submit" id="savebtn" class="btns">Save</button>
-        </div>
-
-        <div id="success-toast" class="toast-hidden">
-            Registration Successful!
-        </div>
-    </form>   
-
-    </section>
-
-<br/><br/><br/><br/>
-
-    <section id="read" class="content"> View Students </section>
-    <section id="update" class="content"> Update Student Records </section>
-    <section id="delete" class="content"> Remove Student Records </section>
+</nav>
 
 
+<section id="home" class="section homecontent">
+    <h1>Welcome to Student Management System</h1>
+</section>
 
-    <script src="script.js"></script>
+
+<section id="create" class="section content">
+
+    <h1>Insert Student</h1>
+
+    <form id="studentForm" action="../includes/insert.php" method="POST">
+
+        <input type="text" name="surname" placeholder="Surname" required><br>
+        <input type="text" name="name" placeholder="Name" required><br>
+        <input type="text" name="middlename" placeholder="Middle Name"><br>
+        <input type="text" name="address" placeholder="Address"><br>
+        <input type="text" name="contact" placeholder="Contact"><br>
+
+        <button type="submit">Save</button>
+        <button type="button" id="clrbtn">Clear</button>
+
+    </form>
+
+</section>
+
+
+<section id="read" class="section content">
+
+    <h1>Student Records</h1>
+
+    <?php
+    require_once "../includes/db.php";
+
+    $stmt = $pdo->query("SELECT * FROM students ORDER BY id DESC");
+    $students = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    ?>
+
+    <table border="1" width="100%">
+        <tr>
+            <th>ID</th>
+            <th>Surname</th>
+            <th>Name</th>
+            <th>Middle</th>
+            <th>Address</th>
+            <th>Contact</th>
+            <th>Actions</th>
+        </tr>
+
+        <?php foreach ($students as $s): ?>
+        <tr>
+            <td><?= $s['id'] ?></td>
+            <td><?= $s['surname'] ?></td>
+            <td><?= $s['name'] ?></td>
+            <td><?= $s['middlename'] ?></td>
+            <td><?= $s['address'] ?></td>
+            <td><?= $s['contact'] ?></td>
+            <td>
+                <a href="update.php?id=<?= $s['id'] ?>">Edit</a> |
+                <a href="delete.php?id=<?= $s['id'] ?>">Delete</a>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+
+    </table>
+
+</section>
+
+
+<section id="update" class="section content">
+    <h1>Update Section</h1>
+    <p>Click edit in Read section to update student.</p>
+</section>
+
+
+<section id="delete" class="section content">
+    <h1>Delete Section</h1>
+    <p>Click delete in Read section.</p>
+</section>
+
+<script src="script.js"></script>
+
 </body>
 </html>
